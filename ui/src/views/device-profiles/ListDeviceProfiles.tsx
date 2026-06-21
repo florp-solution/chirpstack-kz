@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 import { Space, Breadcrumb, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { PageHeader } from "@ant-design/pro-layout";
 
 import type {
   ListDeviceProfilesResponse,
@@ -18,6 +17,7 @@ import DataTable from "../../components/DataTable";
 import DeviceProfileStore from "../../stores/DeviceProfileStore";
 import Admin from "../../components/Admin";
 import { useTitle } from "../helpers";
+import PageHeader from "../../components/PageHeader";
 
 interface IProps {
   tenant: Tenant;
@@ -123,7 +123,7 @@ function ListDeviceProfiles(props: IProps) {
   };
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="large">
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <PageHeader
         breadcrumbRender={() => (
           <Breadcrumb

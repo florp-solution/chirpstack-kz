@@ -1,7 +1,6 @@
 import { Route, Routes, Link, useNavigate, useLocation } from "react-router-dom";
 
 import { Space, Breadcrumb, Card, Button, Menu, MenuProps } from "antd";
-import { PageHeader } from "@ant-design/pro-layout";
 
 import type { Tenant } from "@chirpstack/chirpstack-api-grpc-web/api/tenant_pb";
 import type { Application } from "@chirpstack/chirpstack-api-grpc-web/api/application_pb";
@@ -17,6 +16,7 @@ import ListIntegrations from "./ListIntegrations";
 import ListMulticastGroups from "../multicast-groups/ListMulticastGroups";
 import ListFuotaDeployments from "../fuota/ListFuotaDeployments";
 import Admin from "../../components/Admin";
+import PageHeader from "../../components/PageHeader";
 
 import CreateHttpIntegration from "./integrations/CreateHttpIntegration";
 import EditHttpIntegration from "./integrations/EditHttpIntegration";
@@ -119,7 +119,7 @@ function ApplicationLayout(props: IProps) {
   }
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="large">
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <PageHeader
         breadcrumbRender={() => (
           <Breadcrumb

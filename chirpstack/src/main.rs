@@ -87,6 +87,10 @@ enum Commands {
         /// Path to file containing the new password.
         #[arg(short, long, value_name = "FILE")]
         password_file: Option<String>,
+
+        /// Read password from stdin.
+        #[arg(long)]
+        stdin: bool,
     },
 
     /// Migrate device-sessions from Redis to PostgreSQL.
@@ -94,6 +98,9 @@ enum Commands {
 
     /// Migrate device-profile templates to device profiles.
     MigrateDeviceProfileTemplates {},
+
+    /// Migrate Device <> Gateway Rx Info.
+    MigrateDeviceGatewayRxInfo {},
 }
 
 #[tokio::main]
@@ -138,10 +145,14 @@ async fn main() -> Result<()> {
         Some(Commands::SetPassword {
             email,
             password_file,
-        }) => cmd::set_password::run(email, password_file).await?,
+            stdin,
+        }) => cmd::set_password::run(email, password_file, *stdin).await?,
         Some(Commands::MigrateDeviceSessionsToPostgres {}) => cmd::migrate_ds_to_pg::run().await?,
         Some(Commands::MigrateDeviceProfileTemplates {}) => {
             cmd::migrate_device_profile_templates::run().await?
+        }
+        Some(Commands::MigrateDeviceGatewayRxInfo {}) => {
+            cmd::migrate_device_gateway_rx_info::run().await?
         }
         None => cmd::root::run().await?,
     }

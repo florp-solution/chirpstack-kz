@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,11 +11,12 @@ import { GlobalSearchRequest } from "@chirpstack/chirpstack-api-grpc-web/api/int
 
 import InternalStore from "../stores/InternalStore";
 import SessionStore from "../stores/SessionStore";
-import { MenuProps } from "antd/lib";
+import type { MenuProps } from "antd/lib";
 
 const renderTitle = (title: string) => <span>{title}</span>;
 
 const renderItem = (title: string, url: string) => ({
+  key: url,
   value: title,
   url,
   label: <Link to={url}>{title}</Link>,
@@ -46,10 +48,8 @@ function Header({ user }: { user: User }) {
     });
   };
 
-  // this type assertion is needed because of a bug in antd's AutoComplete typings
-  const onSelect = (_: unknown, _option: (typeof options)[number]) => {
-    const option = _option as unknown as ReturnType<typeof renderItem>;
-
+  const onSelect = (_: unknown, _option: unknown) => {
+    const option = _option as ReturnType<typeof renderItem>;
     navigate(option.url);
   };
 
@@ -80,30 +80,30 @@ function Header({ user }: { user: User }) {
     return null;
   }
 
-  const oidcEnabled = settings!.getOpenidConnect()!.getEnabled();
-  const oAuth2Enabled = settings!.getOauth2()!.getEnabled();
+  const oidcEnabled = settings.getOpenidConnect()!.getEnabled();
+  const oAuth2Enabled = settings.getOauth2()!.getEnabled();
 
-  let menu: MenuProps = {};
+  const menu: MenuProps = { items: [] };
 
   if (!(oidcEnabled || oAuth2Enabled)) {
-    menu.items = [
-      {
-        key: "change-pw",
-        label: <Link to={`/users/${user.getId()}/password`}>Change password</Link>,
-      },
-    ];
+    menu.items!.push({
+      key: "change-pw",
+      label: <Link to={`/users/${user.getId()}/password`}>Change password</Link>,
+    });
   }
 
-  menu.items?.push({
+  menu.items!.push({
     key: "logout",
     label: "Logout",
     onClick: onLogout,
   });
 
-  const options: {
+  type AutocompleteOption = {
     label: JSX.Element;
     options: ReturnType<typeof renderItem>[];
-  }[] = [
+  };
+
+  const options: AutocompleteOption[] = [
     {
       label: renderTitle("Tenants"),
       options: [],
@@ -162,8 +162,9 @@ function Header({ user }: { user: User }) {
             options={options}
             onSearch={onSearch}
             onSelect={onSelect}
+            style={{ width: 500, lineHeight: "32px" }}
           >
-            <Input.Search placeholder="Search..." style={{ width: 500, marginTop: -5 }} />
+            <Input.Search size="medium" placeholder="Search..." />
           </AutoComplete>
         </div>
         <div className="help">

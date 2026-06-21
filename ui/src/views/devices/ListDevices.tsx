@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { format } from "date-fns";
 import { Space, Button, Dropdown, Menu, Modal, Select, Tag, Popover, Typography } from "antd";
+import type { SelectProps } from "antd/lib";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -342,24 +343,18 @@ function ListDevices(props: IProps) {
     ],
   };
 
-  const mgOptions = multicastGroups.map(mg => (
-    <Select.Option value={mg.getId()} key={mg.getId()}>
-      {mg.getName()}
-    </Select.Option>
-  ));
-  const relayOptions = relays.map(r => (
-    <Select.Option value={r.getDevEui()} key={r.getDevEui()}>
-      {r.getName()}
-    </Select.Option>
-  ));
-  const fuotaOptions = fuotaDeployments.map(r => (
-    <Select.Option value={r.getId()} key={r.getId()}>
-      {r.getName()}
-    </Select.Option>
-  ));
+  const mgOptions: SelectProps["options"] = multicastGroups.map(mg => {
+    return { value: mg.getId(), label: mg.getName() };
+  });
+  const relayOptions: SelectProps["options"] = relays.map(r => {
+    return { value: r.getDevEui(), label: r.getName() };
+  });
+  const fuotaOptions: SelectProps["options"] = fuotaDeployments.map(r => {
+    return { value: r.getId(), label: r.getName() };
+  });
 
   return (
-    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+    <Space orientation="vertical" size="large" style={{ width: "100%" }}>
       <Modal
         title="Add selected devices to multicast-group"
         open={mgModalVisible}
@@ -367,10 +362,13 @@ function ListDevices(props: IProps) {
         onCancel={hideMgModal}
         okButtonProps={{ disabled: mgSelected === "" }}
       >
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          <Select style={{ width: "100%" }} onChange={onMgSelected} placeholder="Select Multicast-group">
-            {mgOptions}
-          </Select>
+        <Space orientation="vertical" size="large" style={{ width: "100%" }}>
+          <Select
+            style={{ width: "100%" }}
+            onChange={onMgSelected}
+            placeholder="Select Multicast-group"
+            options={mgOptions}
+          />
         </Space>
       </Modal>
       <Modal
@@ -380,7 +378,7 @@ function ListDevices(props: IProps) {
         onCancel={() => setFuotaModalVisible(false)}
         okButtonProps={{ disabled: fuotaDeploymentSelected === "" }}
       >
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Space orientation="vertical" size="large" style={{ width: "100%" }}>
           <Typography.Text>
             This will add the selected devices to a FUOTA deployment. Devices must have the same device-profile as
             associated with the FUOTA deployment.
@@ -389,9 +387,8 @@ function ListDevices(props: IProps) {
             style={{ width: "100%" }}
             onChange={v => setFuotaDeploymentSelected(v)}
             placeholder="Select FUOTA deployment"
-          >
-            {fuotaOptions}
-          </Select>
+            options={fuotaOptions}
+          />
         </Space>
       </Modal>
       <Modal
@@ -401,14 +398,17 @@ function ListDevices(props: IProps) {
         onCancel={hideRelayModal}
         okButtonProps={{ disabled: relaySelected === "" }}
       >
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          <Select style={{ width: "100%" }} onChange={onRelaySelected} placeholder="Select Relay">
-            {relayOptions}
-          </Select>
+        <Space orientation="vertical" size="large" style={{ width: "100%" }}>
+          <Select
+            style={{ width: "100%" }}
+            onChange={onRelaySelected}
+            placeholder="Select Relay"
+            options={relayOptions}
+          />
         </Space>
       </Modal>
       <Admin tenantId={props.application.getTenantId()} isDeviceAdmin>
-        <Space direction="horizontal" style={{ float: "right" }}>
+        <Space orientation="horizontal" style={{ float: "right" }}>
           <Button type="primary">
             <Link
               to={`/tenants/${props.application.getTenantId()}/applications/${props.application.getId()}/devices/create`}

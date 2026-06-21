@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 import { Space, Breadcrumb, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { PageHeader } from "@ant-design/pro-layout";
 
 import type {
   ListApplicationsResponse,
@@ -15,6 +14,7 @@ import type { GetPageCallbackFunc } from "../../components/DataTable";
 import DataTable from "../../components/DataTable";
 import ApplicationStore from "../../stores/ApplicationStore";
 import Admin from "../../components/Admin";
+import PageHeader from "../../components/PageHeader";
 import { useTitle } from "../helpers";
 
 interface IProps {
@@ -58,7 +58,7 @@ function ListApplications(props: IProps) {
   };
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="large">
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <PageHeader
         breadcrumbRender={() => (
           <Breadcrumb

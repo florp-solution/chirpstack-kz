@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { Link } from "react-router-dom";
 
 import { presetPalettes } from "@ant-design/colors";
 import { Space, Breadcrumb, Card, Row, Col, Empty } from "antd";
-import { PageHeader } from "@ant-design/pro-layout";
 
 import { formatDistanceToNow } from "date-fns";
 import type { LatLngTuple, PointTuple } from "leaflet";
@@ -24,6 +23,7 @@ import { ListGatewaysRequest, GatewayState } from "@chirpstack/chirpstack-api-gr
 
 import InternalStore from "../../stores/InternalStore";
 import GatewayStore from "../../stores/GatewayStore";
+import PageHeader from "../../components/PageHeader";
 import type { MarkerColor } from "../../components/Map";
 import Map, { Marker } from "../../components/Map";
 import { useTitle } from "../helpers";
@@ -50,7 +50,7 @@ function GatewaysMap() {
   };
 
   const bounds: LatLngTuple[] = [];
-  const markers: JSX.Element[] = [];
+  const markers: ReactElement[] = [];
 
   for (const item of items) {
     const pos: LatLngTuple = [item.getLocation()!.getLatitude(), item.getLocation()!.getLongitude()];
@@ -240,7 +240,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="large">
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <PageHeader
         breadcrumbRender={() => <Breadcrumb items={[{ title: "Network Server" }, { title: "Dashboard" }]} />}
         title="Dashboard"
